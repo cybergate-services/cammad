@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
 
@@ -8,6 +8,8 @@ services:
       - zammad-railsserver
     entrypoint: /usr/local/bin/backup.sh
     image: ${IMAGE_REPO}:zammad-postgresql${VERSION}
+    container_name: zammad-backup
+    hostname: zammad-backup
     links:
       - zammad-postgresql
     restart: ${RESTART}
@@ -17,6 +19,8 @@ services:
 
   zammad-elasticsearch:
     image: ${IMAGE_REPO}:zammad-elasticsearch${VERSION}
+    container_name: zammad-elasticsearch
+    hostname: zammad-elasticsearch
     restart: ${RESTART}
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
@@ -26,6 +30,8 @@ services:
     depends_on:
       - zammad-postgresql
     image: ${IMAGE_REPO}:zammad${VERSION}
+    container_name: zammad-init
+    hostname: zammad-init
     links:
       - zammad-elasticsearch
       - zammad-postgresql
@@ -36,6 +42,8 @@ services:
   zammad-memcached:
     command: ["zammad-memcached"]
     image: ${IMAGE_REPO}:zammad-memcached${VERSION}
+    container_name: zammad-memcached
+    hostname: zammad-memcached
     restart: ${RESTART}
 
   zammad-nginx:
@@ -43,6 +51,8 @@ services:
     depends_on:
       - zammad-railsserver
     image: ${IMAGE_REPO}:zammad${VERSION}
+    container_name: zammad-nginx
+    hostname: zammad-nginx
     links:
       - zammad-railsserver
       - zammad-websocket
@@ -50,16 +60,20 @@ services:
     volumes:
       - zammad-data:/opt/zammad
     expose:
-      - "80"
+      - "8080"
 
   zammad-postgresql:
     image: ${IMAGE_REPO}:zammad-postgresql${VERSION}
+    container_name: zammad-postgresql
+    hostname: zammad-postgresql
     restart: ${RESTART}
     volumes:
       - postgresql-data:/var/lib/postgresql/data
 
   zammad-railsserver:
     command: ["zammad-railsserver"]
+    container_name: zammad-railsserver
+    hostname: zammad-railsserver
     depends_on:
       - zammad-memcached
       - zammad-postgresql
@@ -78,6 +92,8 @@ services:
       - zammad-memcached
       - zammad-railsserver
     image: ${IMAGE_REPO}:zammad${VERSION}
+    container_name: zammad-scheduler
+    hostname: zammad-scheduler
     links:
       - zammad-elasticsearch
       - zammad-memcached
@@ -92,6 +108,8 @@ services:
       - zammad-memcached
       - zammad-railsserver
     image: ${IMAGE_REPO}:zammad${VERSION}
+    container_name: zammad-websocket
+    hostname: zammad-websocket
     links:
       - zammad-postgresql
       - zammad-memcached
