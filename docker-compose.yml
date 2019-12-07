@@ -173,7 +173,6 @@ networks:
     driver: bridge
     driver_opts:
       com.docker.network.bridge.name: br-zammd
-    enable_ipv6: false
     ipam:
       driver: default
       config:
