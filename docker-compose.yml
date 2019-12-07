@@ -20,6 +20,8 @@ services:
       - DHLEVEL=${DHLEVEL}
       - ONLY_SUBDOMAINS=${ONLY_SUBDOMAINS}
       - STAGING=${STAGING}
+    volumes:
+      - ./data/letsencrypt/config:/config
     networks:
      - zammd-network     
 
