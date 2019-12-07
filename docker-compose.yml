@@ -2,6 +2,27 @@ version: '3'
 
 services:
 
+  zammd-proxy:
+    image: cybergatelabs/letsencrypt
+    container_name: zammd-proxy
+    hostname: zammd-proxy
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - URL=${URL}
+      - SUBDOMAINS=${SUBDOMAINS},
+      - EXTRA_DOMAINS=${EXTRA_DOMAINS}
+      - VALIDATION=${VALIDATION}
+      - EMAIL=${EMAIL}
+      - DHLEVEL=${DHLEVEL}
+      - ONLY_SUBDOMAINS=${ONLY_SUBDOMAINS}
+      - STAGING=${STAGING}
+    networks:
+     - zammd-network     
+
   zammad-backup:
     command: ["zammad-backup"]
     depends_on:
@@ -16,6 +37,8 @@ services:
     volumes:
       - zammad-backup:/var/tmp/zammad
       - zammad-data:/opt/zammad
+    networks:
+     - zammd-network
 
   zammad-elasticsearch:
     image: ${IMAGE_REPO}:zammad-elasticsearch${VERSION}
@@ -24,6 +47,8 @@ services:
     restart: ${RESTART}
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+     - zammd-network
 
   zammad-init:
     command: ["zammad-init"]
@@ -38,6 +63,8 @@ services:
     restart: on-failure
     volumes:
       - zammad-data:/opt/zammad
+    networks:
+     - zammd-network
 
   zammad-memcached:
     command: ["zammad-memcached"]
@@ -45,6 +72,8 @@ services:
     container_name: zammad-memcached
     hostname: zammad-memcached
     restart: ${RESTART}
+    networks:
+     - zammd-network
 
   zammad-nginx:
     command: ["zammad-nginx"]
@@ -61,6 +90,8 @@ services:
       - zammad-data:/opt/zammad
     expose:
       - "8080"
+    networks:
+     - zammd-network
 
   zammad-postgresql:
     image: ${IMAGE_REPO}:zammad-postgresql${VERSION}
@@ -69,6 +100,8 @@ services:
     restart: ${RESTART}
     volumes:
       - postgresql-data:/var/lib/postgresql/data
+    networks:
+     - zammd-network
 
   zammad-railsserver:
     command: ["zammad-railsserver"]
@@ -85,6 +118,8 @@ services:
     restart: ${RESTART}
     volumes:
       - zammad-data:/opt/zammad
+    networks:
+     - zammd-network
 
   zammad-scheduler:
     command: ["zammad-scheduler"]
@@ -101,6 +136,8 @@ services:
     restart: ${RESTART}
     volumes:
       - zammad-data:/opt/zammad
+    networks:
+     - zammd-network
 
   zammad-websocket:
     command: ["zammad-websocket"]
@@ -116,6 +153,8 @@ services:
     restart: ${RESTART}
     volumes:
       - zammad-data:/opt/zammad
+    networks:
+     - zammd-network
 
 volumes:
   elasticsearch-data:
@@ -126,3 +165,14 @@ volumes:
     driver: local
   zammad-data:
     driver: local
+
+networks:
+  zammd-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-zammd
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.26.1.0/24
