@@ -20,6 +20,9 @@ services:
       - DHLEVEL=${DHLEVEL}
       - ONLY_SUBDOMAINS=${ONLY_SUBDOMAINS}
       - STAGING=${STAGING}
+    ports:
+      - 80:80
+      - 443:443
     volumes:
       - ./data/letsencrypt/config:/config
     networks:
@@ -90,8 +93,8 @@ services:
     restart: ${RESTART}
     volumes:
       - zammad-data:/opt/zammad
-    expose:
-      - "8080"
+    ports:
+      - 8080:80
     networks:
      - zammd-network
 
