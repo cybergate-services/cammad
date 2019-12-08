@@ -2,10 +2,10 @@ version: '3'
 
 services:
 
-  zammd-proxy:
+  zammad-proxy:
     image: cybergatelabs/letsencrypt
-    container_name: zammd-proxy
-    hostname: zammd-proxy
+    container_name: zammad-proxy
+    hostname: zammad-proxy
     cap_add:
       - NET_ADMIN
     environment:
