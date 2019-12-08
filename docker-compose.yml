@@ -91,8 +91,6 @@ services:
       - zammad-railsserver
       - zammad-websocket
     restart: ${RESTART}
-    ports:
-      - 1080:80
     volumes:
       - zammad-data:/opt/zammad
     networks:
