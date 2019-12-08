@@ -92,7 +92,7 @@ services:
       - zammad-websocket
     restart: ${RESTART}
     ports:
-      - 80:1080
+      - 1080:80
     volumes:
       - zammad-data:/opt/zammad
     networks:
