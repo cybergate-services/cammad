@@ -80,13 +80,13 @@ services:
     networks:
      - zammd-network
 
-  zammad-nginx:
+  nginx:
     command: ["zammad-nginx"]
     depends_on:
       - zammad-railsserver
     image: ${IMAGE_REPO}:zammad${VERSION}
-    container_name: zammad-nginx
-    hostname: zammad-nginx
+    container_name: nginx
+    hostname: nginx
     links:
       - zammad-railsserver
       - zammad-websocket
