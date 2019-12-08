@@ -93,9 +93,6 @@ services:
     restart: ${RESTART}
     volumes:
       - zammad-data:/opt/zammad
-    expose:
-      - "8080"
-
     networks:
      - zammd-network
 
