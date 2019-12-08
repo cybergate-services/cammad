@@ -91,6 +91,8 @@ services:
       - zammad-railsserver
       - zammad-websocket
     restart: ${RESTART}
+    expose:
+      - "80"
     volumes:
       - zammad-data:/opt/zammad
     networks:
